@@ -1,0 +1,19 @@
+[package]
+name = "md-bakery"
+version = "1.0.0"
+authors = ["Patryk 'PsichiX' Budzynski <psichix@gmail.com>"]
+edition = "2018"
+description = "Markdown Bakery CLI app"
+license = "MIT"
+homepage = "https://github.com/PsichiX/md-bakery"
+repository = "https://github.com/PsichiX/md-bakery"
+documentation = "https://docs.rs/md-bakery"
+readme = "README.md"
+
+[[bin]]
+name = "mdbakery"
+path = "./src/main.rs"
+
+[dependencies]
+regex = "1.4"
+clap = "2.33"
