@@ -77,6 +77,7 @@ OPTIONS:
 
 ## TODO:
 - [ ] Add `exec` code block variant that runs executable with parameters specified in block content, then put its stdout:
+
       ```bash: exec
       cargo run -- --help
       ```

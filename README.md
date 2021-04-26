@@ -47,16 +47,15 @@ struct Foo {
 
 fn main() {
     // [md-bakery: begin @ snippet-b]
-    println!(
-        "{:?}",
-        Foo {
-            bar: {
-                let mut result = HashMap::new();
-                result.insert("answer".to_owned(), 42);
-                result
-            }
-        }
-    );
+    let foo = Foo {
+        bar: {
+            let mut result = HashMap::new();
+            result.insert("answer".to_owned(), 42);
+            result
+        },
+    };
+
+    println!("{:?}", foo);
     // [md-bakery: end]
 }
 ```
@@ -75,16 +74,15 @@ And then all of that renders into:
     # Snippet B:
 
     ```rust
-    println!(
-        "{:?}",
-        Foo {
-            bar: {
-                let mut result = HashMap::new();
-                result.insert("answer".to_owned(), 42);
-                result
-            }
-        }
-    );
+    let foo = Foo {
+        bar: {
+            let mut result = HashMap::new();
+            result.insert("answer".to_owned(), 42);
+            result
+        },
+    };
+    
+    println!("{:?}", foo);
     ```
 
 **Of course this readme file was baked too, you can see template sources in `/examples` folder!**
@@ -111,6 +109,7 @@ OPTIONS:
 
 ## TODO:
 - [ ] Add `exec` code block variant that runs executable with parameters specified in block content, then put its stdout:
+
       ```bash: exec
       cargo run -- --help
       ```

@@ -9,15 +9,14 @@ struct Foo {
 
 fn main() {
     // [md-bakery: begin @ snippet-b]
-    println!(
-        "{:?}",
-        Foo {
-            bar: {
-                let mut result = HashMap::new();
-                result.insert("answer".to_owned(), 42);
-                result
-            }
-        }
-    );
+    let foo = Foo {
+        bar: {
+            let mut result = HashMap::new();
+            result.insert("answer".to_owned(), 42);
+            result
+        },
+    };
+
+    println!("{:?}", foo);
     // [md-bakery: end]
 }

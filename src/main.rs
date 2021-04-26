@@ -76,7 +76,8 @@ fn main() {
             .unwrap_or_else(|error| panic!("Could not load source file: {:?} | {:?}", path, error));
         let lines = content
             .lines()
-            .map(|line| format!("{}{}", indent, line))
+            .map(|line| line.to_owned())
+            // .map(|line| format!("{}{}", indent, line))
             .collect::<Vec<String>>();
         let found = lines.iter().any(|line| {
             if let Some(captures) = pattern_begin.captures(line) {
@@ -114,17 +115,22 @@ fn main() {
                 .collect::<Vec<_>>()
         } else {
             lines
+                .into_iter()
+                .map(|line| format!("{}{}", indent, line))
+                .collect::<Vec<_>>()
         };
         let common_prefix = common_whitespace_prefix(&lines);
-        let content = if common_prefix.is_empty() {
-            lines.join("\n")
-        } else {
-            lines
-                .into_iter()
-                .map(|line| format!("{}{}", indent, line.strip_prefix(&common_prefix).unwrap()))
-                .collect::<Vec<_>>()
-                .join("\n")
-        };
+        let content = lines
+            .into_iter()
+            .map(|line| {
+                format!(
+                    "{}{}",
+                    indent,
+                    line.strip_prefix(&common_prefix).unwrap_or_default()
+                )
+            })
+            .collect::<Vec<_>>()
+            .join("\n");
         format!("{}```{}\n{}\n{}```", indent, lang, content, indent)
     });
     let content = pattern_escape.replace_all(&content, |captures: &Captures| {
@@ -140,22 +146,23 @@ fn common_whitespace_prefix(lines: &[String]) -> String {
     if lines.is_empty() {
         return String::new();
     }
-    let mut result = take_whitespaces_prefix(&lines[0]);
-    if !result.is_empty() {
-        for line in lines.iter().skip(1) {
+    let mut result: Option<String> = None;
+    for line in lines {
+        if !line.is_empty() {
             let prefix = take_whitespaces_prefix(&line);
-            result = result
-                .chars()
-                .zip(prefix.chars())
-                .take_while(|(a, b)| a == b)
-                .map(|(a, _)| a)
-                .collect::<String>();
-            if result.is_empty() {
-                break;
+            if let Some(result) = result.as_mut() {
+                *result = result
+                    .chars()
+                    .zip(prefix.chars())
+                    .take_while(|(a, b)| a == b)
+                    .map(|(a, _)| a)
+                    .collect::<String>();
+            } else {
+                result = Some(prefix);
             }
         }
     }
-    result
+    result.unwrap_or_default()
 }
 
 fn take_whitespaces_prefix(value: &str) -> String {

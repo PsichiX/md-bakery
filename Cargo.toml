@@ -1,6 +1,6 @@
 [package]
 name = "md-bakery"
-version = "1.1.0"
+version = "1.2.0"
 authors = ["Patryk 'PsichiX' Budzynski <psichix@gmail.com>"]
 edition = "2018"
 description = "Markdown Bakery CLI app"
