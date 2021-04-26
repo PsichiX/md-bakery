@@ -78,7 +78,7 @@ fn main() {
             .lines()
             .map(|line| format!("{}{}", indent, line))
             .collect::<Vec<String>>();
-        let content = if lines.iter().any(|line| {
+        let found = lines.iter().any(|line| {
             if let Some(captures) = pattern_begin.captures(line) {
                 if let Some(n) = captures.get(2) {
                     if n.as_str() == name {
@@ -87,7 +87,8 @@ fn main() {
                 }
             }
             false
-        }) {
+        });
+        let lines = if found {
             let mut record = false;
             lines
                 .into_iter()
@@ -111,9 +112,18 @@ fn main() {
                     }
                 })
                 .collect::<Vec<_>>()
-                .join("\n")
         } else {
+            lines
+        };
+        let common_prefix = common_whitespace_prefix(&lines);
+        let content = if common_prefix.is_empty() {
             lines.join("\n")
+        } else {
+            lines
+                .into_iter()
+                .map(|line| format!("{}{}", indent, line.strip_prefix(&common_prefix).unwrap()))
+                .collect::<Vec<_>>()
+                .join("\n")
         };
         format!("{}```{}\n{}\n{}```", indent, lang, content, indent)
     });
@@ -124,4 +134,33 @@ fn main() {
     });
     write(output, &*content)
         .unwrap_or_else(|error| panic!("Could not write output file: {} | {:?}", output, error));
+}
+
+fn common_whitespace_prefix(lines: &[String]) -> String {
+    if lines.is_empty() {
+        return String::new();
+    }
+    let mut result = take_whitespaces_prefix(&lines[0]);
+    if !result.is_empty() {
+        for line in lines.iter().skip(1) {
+            let prefix = take_whitespaces_prefix(&line);
+            result = result
+                .chars()
+                .zip(prefix.chars())
+                .take_while(|(a, b)| a == b)
+                .map(|(a, _)| a)
+                .collect::<String>();
+            if result.is_empty() {
+                break;
+            }
+        }
+    }
+    result
+}
+
+fn take_whitespaces_prefix(value: &str) -> String {
+    value
+        .chars()
+        .take_while(|c| c.is_whitespace())
+        .collect::<String>()
 }

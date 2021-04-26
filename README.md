@@ -75,16 +75,16 @@ And then all of that renders into:
     # Snippet B:
 
     ```rust
-        println!(
-            "{:?}",
-            Foo {
-                bar: {
-                    let mut result = HashMap::new();
-                    result.insert("answer".to_owned(), 42);
-                    result
-                }
+    println!(
+        "{:?}",
+        Foo {
+            bar: {
+                let mut result = HashMap::new();
+                result.insert("answer".to_owned(), 42);
+                result
             }
-        );
+        }
+    );
     ```
 
 **Of course this readme file was baked too, you can see template sources in `/examples` folder!**
