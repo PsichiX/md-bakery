@@ -1,6 +1,16 @@
 # Markdown Bakery
 ### CLI tool to bake your fresh and hot MD files
 
+## Install
+
+You can install from crates.io using `cargo`:
+
+```bash
+cargo install md-bakery
+```
+
+> **Note:** The command used to run the program after installing is `mdbakery` **not** `md-bakery`.
+
 ## About
 At least once in your Rust dev lifetime you wanted to make sure all code examples
 in your markdown files are up-to-date, correct and code is formated, but you
